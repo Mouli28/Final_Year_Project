@@ -1,3 +1,4 @@
-extraction.py takes input from Excel with part number and description.
+##Get started##
+extraction.py takes input from Excel with part number and description
 Execute python3 extraction.py
 Generates excel with extracted url and other information
