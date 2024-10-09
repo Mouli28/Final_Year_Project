@@ -1,8 +1,1 @@
- To Get started 
-===============
-- extraction.py takes input from Excel with part number and description
-- Give the location of excel file in the line 135
-- Edit the numbers in line 139 to get the part numbers and description from excel file
-- Execute python3 extraction.py
-- Generates excel with extracted url and other information 
-- These will be stored in the same place where the code is executed
+
