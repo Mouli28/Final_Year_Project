@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Part Cross-Reference Extractor</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        #result {
+            margin-top: 20px;
+            white-space: pre-wrap;
+        }
+        .loading {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>Part Cross-Reference Extractor</h1>
+    <div class="form-group">
+        <label for="input">Enter part details (format: part_number|description|brand):</label><br>
+        <input type="text" id="input" style="width: 100%; padding: 5px;" placeholder="Example: ABC123|Widget Description|BrandName">
+    </div>
+    <button onclick="submitForm()" id="submitBtn">Extract Data</button>
+    <div id="loading" class="loading">Processing... This may take a few minutes.</div>
+    <div id="result"></div>
+
+    <script>
+        function submitForm() {
+            const input = document.getElementById('input').value;
+            const resultDiv = document.getElementById('result');
+            const loadingDiv = document.getElementById('loading');
+            const submitBtn = document.getElementById('submitBtn');
+            
+            if (!input) {
+                resultDiv.textContent = 'Please enter part details';
+                return;
+            }
+
+            // Show loading, disable button
+            loadingDiv.style.display = 'block';
+            submitBtn.disabled = true;
+            resultDiv.textContent = '';
+            
+            fetch('/extraction', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ input_str: input })
+            })
+            .then(response => response.json())
+            .then(data => {
+                loadingDiv.style.display = 'none';
+                submitBtn.disabled = false;
+                
+                if (data.error) {
+                    resultDiv.textContent = 'Error: ' + data.error;
+                } else {
+                    resultDiv.innerHTML = '<h2>Results:</h2>' + 
+                                        '<pre>' + JSON.stringify(data.data, null, 2) + '</pre>';
+                }
+            })
+            .catch(error => {
+                loadingDiv.style.display = 'none';
+                submitBtn.disabled = false;
+                resultDiv.textContent = 'Error: ' + error.message;
+            });
+        }
+    </script>
+</body>
+</html>
